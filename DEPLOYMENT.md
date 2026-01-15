@@ -58,7 +58,7 @@ The easiest way to run the WIZE Platform locally is using Docker Compose.
 
 4. **Start the services:**
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 5. **Access the application:**
@@ -78,28 +78,28 @@ The Docker Compose setup includes:
 
 **View logs:**
 ```bash
-docker-compose logs -f n8n
+docker compose logs -f n8n
 ```
 
 **Stop services:**
 ```bash
-docker-compose down
+docker compose down
 ```
 
 **Stop and remove data:**
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
 
 **Restart services:**
 ```bash
-docker-compose restart
+docker compose restart
 ```
 
 **Update to latest version:**
 ```bash
-docker-compose pull
-docker-compose up -d
+docker compose pull
+docker compose up -d
 ```
 
 ### Building Custom Image
@@ -111,7 +111,7 @@ If you want to build the WIZE Platform with your custom changes:
    pnpm build:docker
    ```
 
-2. **Update docker-compose.yml:**
+2. **Update docker compose.yml:**
    Replace `image: docker.n8n.io/n8nio/n8n:latest` with:
    ```yaml
    build:
@@ -121,7 +121,7 @@ If you want to build the WIZE Platform with your custom changes:
 
 3. **Build and start:**
    ```bash
-   docker-compose up -d --build
+   docker compose up -d --build
    ```
 
 ---
@@ -339,13 +339,13 @@ pnpm dev:fe
 1. **Database backups:**
    ```bash
    # PostgreSQL backup
-   docker-compose exec postgres pg_dump -U n8n n8n > backup.sql
+   docker compose exec postgres pg_dump -U n8n n8n > backup.sql
    ```
 
 2. **Workflow data:**
    ```bash
    # Backup n8n data directory
-   docker-compose exec n8n tar czf /tmp/n8n-backup.tar.gz /home/node/.n8n
+   docker compose exec n8n tar czf /tmp/n8n-backup.tar.gz /home/node/.n8n
    docker cp wize-n8n:/tmp/n8n-backup.tar.gz ./
    ```
 
@@ -394,7 +394,7 @@ For high-availability deployments:
 
 **Port already in use:**
 ```bash
-# Change port in .env or docker-compose.yml
+# Change port in .env or docker compose.yml
 N8N_PORT=5679
 ```
 
@@ -415,7 +415,7 @@ pnpm build
 **Permission errors in Docker:**
 ```bash
 # Fix ownership
-docker-compose exec n8n chown -R node:node /home/node/.n8n
+docker compose exec n8n chown -R node:node /home/node/.n8n
 ```
 
 ### Getting Help

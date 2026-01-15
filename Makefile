@@ -61,35 +61,35 @@ docker-build: ## Build Docker image from source
 	docker build -t wize-platform:local .
 
 docker-up: ## Start services with Docker Compose (production setup)
-	docker-compose up -d
+	docker compose up -d
 
 docker-up-dev: ## Start services with Docker Compose (development setup)
-	docker-compose -f docker-compose.dev.yml up -d
+	docker compose -f docker-compose.dev.yml up -d
 
 docker-down: ## Stop Docker Compose services
-	docker-compose down
+	docker compose down
 
 docker-down-clean: ## Stop Docker Compose services and remove volumes
-	docker-compose down -v
+	docker compose down -v
 
 docker-logs: ## Show Docker Compose logs
-	docker-compose logs -f
+	docker compose logs -f
 
 docker-logs-n8n: ## Show n8n container logs only
-	docker-compose logs -f n8n
+	docker compose logs -f n8n
 
 docker-restart: ## Restart Docker Compose services
-	docker-compose restart
+	docker compose restart
 
 docker-shell: ## Open shell in n8n container
-	docker-compose exec n8n sh
+	docker compose exec n8n sh
 
 docker-rebuild: ## Rebuild and restart Docker services
-	docker-compose up -d --build
+	docker compose up -d --build
 
 # Database Commands
 db-backup: ## Backup PostgreSQL database
-	docker-compose exec postgres pg_dump -U n8n n8n > backup-$$(date +%Y%m%d-%H%M%S).sql
+	docker compose exec postgres pg_dump -U n8n n8n > backup-$$(date +%Y%m%d-%H%M%S).sql
 	@echo "Database backed up to backup-$$(date +%Y%m%d-%H%M%S).sql"
 
 db-restore: ## Restore PostgreSQL database (DB_BACKUP_FILE=backup.sql make db-restore)
@@ -97,7 +97,7 @@ db-restore: ## Restore PostgreSQL database (DB_BACKUP_FILE=backup.sql make db-re
 		echo "Error: DB_BACKUP_FILE not specified. Usage: DB_BACKUP_FILE=backup.sql make db-restore"; \
 		exit 1; \
 	fi
-	cat $(DB_BACKUP_FILE) | docker-compose exec -T postgres psql -U n8n n8n
+	cat $(DB_BACKUP_FILE) | docker compose exec -T postgres psql -U n8n n8n
 
 # Cleanup Commands
 clean: ## Clean build artifacts

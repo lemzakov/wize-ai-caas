@@ -50,7 +50,7 @@ make env-setup
 
 **For Development (simple setup):**
 ```bash
-docker-compose -f docker-compose.dev.yml up -d
+docker compose -f docker compose.dev.yml up -d
 
 # Or with Makefile
 make docker-up-dev
@@ -58,7 +58,7 @@ make docker-up-dev
 
 **For Production (with PostgreSQL and Redis):**
 ```bash
-docker-compose up -d
+docker compose up -d
 
 # Or with Makefile
 make docker-up
@@ -153,19 +153,19 @@ make quickstart-prod # Setup and start in prod mode
 
 ```bash
 # Start services
-docker-compose up -d
+docker compose up -d
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Stop services
-docker-compose down
+docker compose down
 
 # Stop and remove data
-docker-compose down -v
+docker compose down -v
 
 # Restart
-docker-compose restart
+docker compose restart
 ```
 
 ### Using pnpm
@@ -217,21 +217,21 @@ After starting the platform:
 
 ### Port 5678 already in use
 ```bash
-# Change port in docker-compose.yml or .env
-# Edit docker-compose.yml and change "5678:5678" to "5679:5678"
+# Change port in docker compose.yml or .env
+# Edit docker compose.yml and change "5678:5678" to "5679:5678"
 # Then access at http://localhost:5679
 ```
 
 ### Can't access the platform
 ```bash
 # Check if services are running
-docker-compose ps
+docker compose ps
 
 # Check logs for errors
-docker-compose logs n8n
+docker compose logs n8n
 
 # Restart services
-docker-compose restart
+docker compose restart
 ```
 
 ### Build failures
@@ -245,8 +245,8 @@ pnpm build
 ### Database issues
 ```bash
 # For Docker setup, recreate volumes
-docker-compose down -v
-docker-compose up -d
+docker compose down -v
+docker compose up -d
 ```
 
 ---
