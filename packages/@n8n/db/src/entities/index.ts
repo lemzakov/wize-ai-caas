@@ -5,6 +5,7 @@ import { AuthIdentity } from './auth-identity';
 import { AuthProviderSyncHistory } from './auth-provider-sync-history';
 import { BinaryDataFile, SourceTypeSchema, type SourceType } from './binary-data-file';
 import { CredentialsEntity } from './credentials-entity';
+import { DefaultWorkflow } from './default-workflow';
 import { ExecutionAnnotation } from './execution-annotation.ee';
 import { ExecutionData } from './execution-data';
 import { ExecutionEntity } from './execution-entity';
@@ -45,6 +46,7 @@ export {
 	WebhookEntity,
 	AuthIdentity,
 	CredentialsEntity,
+	DefaultWorkflow,
 	Folder,
 	Project,
 	ProjectRelation,
@@ -82,6 +84,7 @@ export const entities = {
 	WebhookEntity,
 	AuthIdentity,
 	CredentialsEntity,
+	DefaultWorkflow,
 	Folder,
 	Project,
 	ProjectRelation,

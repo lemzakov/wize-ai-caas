@@ -61,6 +61,11 @@ const copyDebugInfoToClipboard = async () => {
 		<template #content>
 			<div :class="$style.container">
 				<ElRow>
+					<ElCol :span="24" class="info-name">
+						<N8nText :class="$style.platformName">{{ i18n.baseText('about.platformName') }}</N8nText>
+					</ElCol>
+				</ElRow>
+				<ElRow>
 					<ElCol :span="8" class="info-name">
 						<N8nText>{{ i18n.baseText('about.n8nVersion') }}</N8nText>
 					</ElCol>
@@ -134,5 +139,13 @@ const copyDebugInfoToClipboard = async () => {
 .container > * {
 	margin-bottom: var(--spacing--sm);
 	overflow-wrap: break-word;
+}
+
+.platformName {
+	font-weight: 600;
+	font-size: var(--font-size-m);
+	line-height: 1.5;
+	margin-bottom: var(--spacing--m);
+	color: var(--color-text-dark);
 }
 </style>
