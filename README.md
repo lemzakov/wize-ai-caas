@@ -1,8 +1,8 @@
 ![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
 
-# n8n - Secure Workflow Automation for Technical Teams
+# WIZE Platform - Платформа по цифровизации и автоматизации взаимодействия с клиентом
 
-n8n is a workflow automation platform that gives technical teams the flexibility of code with the speed of no-code. With 400+ integrations, native AI capabilities, and a fair-code license, n8n lets you build powerful automations while maintaining full control over your data and deployments.
+WIZE Platform (based on n8n) is a workflow automation platform for customer interaction digitization and automation within the car subscription lifecycle. It gives technical teams the flexibility of code with the speed of no-code. With 400+ integrations, native AI capabilities, and a fair-code license, WIZE lets you build powerful automations while maintaining full control over your data and deployments.
 
 ![n8n.io - Screenshot](https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-screenshot-readme.png)
 
@@ -16,29 +16,54 @@ n8n is a workflow automation platform that gives technical teams the flexibility
 
 ## Quick Start
 
-Try n8n instantly with [npx](https://docs.n8n.io/hosting/installation/npm/) (requires [Node.js](https://nodejs.org/en/)):
+**👉 New to WIZE Platform? Start here: [GETTING_STARTED.md](GETTING_STARTED.md)**
 
-```
-npx n8n
+### Docker Deployment (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/lemzakov/wize-ai-caas.git
+cd wize-ai-caas
+
+# Quick start (sets up everything)
+make quickstart
 ```
 
-Or deploy with [Docker](https://docs.n8n.io/hosting/installation/docker/):
+Access the platform at http://localhost:5678
 
-```
-docker volume create n8n_data
-docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
+### From Source
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build and start
+pnpm build
+pnpm start
 ```
 
-Access the editor at http://localhost:5678
+📖 **See detailed instructions:** [Quick Start Guide](QUICKSTART.md)
+
+## Deployment Options
+
+- **🐳 Docker** - Production-ready setup with PostgreSQL and Redis
+- **☁️ Vercel** - Serverless deployment (with limitations)
+- **🔨 From Source** - Build and deploy manually
+
+📖 **Full deployment guide:** [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ## Resources
 
-- 📚 [Documentation](https://docs.n8n.io)
+- 🚀 [**Getting Started Guide**](GETTING_STARTED.md) - Choose your deployment path
+- 📚 [Quick Start Guide](QUICKSTART.md) - Get started in minutes
+- 🚀 [Deployment Guide](DEPLOYMENT.md) - Docker, Vercel, and more
+- ✅ [Deployment Checklist](DEPLOYMENT_CHECKLIST.md) - Validation steps
+- 📋 [Default Workflows Manual (Russian)](DEFAULT_WORKFLOWS_MANUAL_RU.md) - Workflow templates
 - 🔧 [400+ Integrations](https://n8n.io/integrations)
 - 💡 [Example Workflows](https://n8n.io/workflows)
 - 🤖 [AI & LangChain Guide](https://docs.n8n.io/advanced-ai/)
 - 👥 [Community Forum](https://community.n8n.io)
-- 📖 [Community Tutorials](https://community.n8n.io/c/tutorials/28)
+- 📖 [Official n8n Documentation](https://docs.n8n.io)
 
 ## Support
 
@@ -47,15 +72,37 @@ Need help? Our community forum is the place to get support and connect with othe
 
 ## License
 
-n8n is [fair-code](https://faircode.io) distributed under the [Sustainable Use License](https://github.com/n8n-io/n8n/blob/master/LICENSE.md) and [n8n Enterprise License](https://github.com/n8n-io/n8n/blob/master/LICENSE_EE.md).
+WIZE Platform is based on n8n, which is [fair-code](https://faircode.io) distributed under the [Sustainable Use License](https://github.com/n8n-io/n8n/blob/master/LICENSE.md) and [n8n Enterprise License](https://github.com/n8n-io/n8n/blob/master/LICENSE_EE.md).
 
 - **Source Available**: Always visible source code
-- **Self-Hostable**: Deploy anywhere
+- **Self-Hostable**: Deploy anywhere (Docker, Vercel, VPS, etc.)
 - **Extensible**: Add your own nodes and functionality
 
 [Enterprise licenses](mailto:license@n8n.io) available for additional features and support.
 
 Additional information about the license model can be found in the [docs](https://docs.n8n.io/sustainable-use-license/).
+
+## Repository Structure
+
+```
+wize-ai-caas/
+├── packages/           # Monorepo packages
+│   ├── cli/           # Backend application
+│   ├── core/          # Core workflow engine
+│   ├── frontend/      # Vue.js frontend
+│   ├── nodes-base/    # Built-in workflow nodes
+│   └── @n8n/          # Shared packages
+├── docker/            # Docker build configurations
+├── default-workflows/ # Template workflows for automotive use cases
+├── .env.example       # Environment variables template
+├── docker-compose.yml # Production Docker setup
+├── docker-compose.dev.yml # Development Docker setup
+├── Dockerfile         # Custom Docker build
+├── Makefile          # Convenience commands
+├── QUICKSTART.md     # Quick start guide
+├── DEPLOYMENT.md     # Deployment guide
+└── DEFAULT_WORKFLOWS_MANUAL_RU.md # Workflow templates (Russian)
+```
 
 ## Contributing
 
