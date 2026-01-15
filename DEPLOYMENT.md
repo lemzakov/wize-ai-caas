@@ -111,7 +111,7 @@ If you want to build the WIZE Platform with your custom changes:
    pnpm build:docker
    ```
 
-2. **Update docker compose.yml:**
+2. **Update docker-compose.yml:**
    Replace `image: docker.n8n.io/n8nio/n8n:latest` with:
    ```yaml
    build:
@@ -123,6 +123,52 @@ If you want to build the WIZE Platform with your custom changes:
    ```bash
    docker compose up -d --build
    ```
+
+### Exporting Docker Images
+
+You can export Docker images for backup, transfer, or offline deployment:
+
+**Export custom built image:**
+```bash
+# Export with default name (timestamped)
+make docker-export
+
+# Export with custom name
+make docker-export IMAGE_NAME=wize-platform:local OUTPUT=wize-platform.tar
+
+# Export compressed (smaller file size)
+make docker-export-compressed OUTPUT=wize-platform.tar.gz
+```
+
+**Export all platform images:**
+```bash
+# Export all images (n8n, PostgreSQL, Redis)
+make docker-export-all
+
+# Export all images compressed
+make docker-export-all-compressed
+```
+
+**Import Docker image:**
+```bash
+# Import exported image
+make docker-import FILE=wize-platform.tar
+
+# Or use docker directly
+docker load -i wize-platform.tar
+```
+
+**Manual export (without Makefile):**
+```bash
+# Export single image
+docker save -o wize-platform.tar wize-platform:local
+
+# Export compressed
+docker save wize-platform:local | gzip > wize-platform.tar.gz
+
+# Export multiple images
+docker save -o images.tar image1:tag image2:tag image3:tag
+```
 
 ---
 

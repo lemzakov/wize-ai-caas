@@ -144,6 +144,12 @@ make docker-down     # Stop services
 make docker-logs     # View logs
 make docker-shell    # Open shell in container
 
+# Docker image export/import
+make docker-export             # Export custom image
+make docker-export-compressed  # Export compressed
+make docker-export-all         # Export all platform images
+make docker-import FILE=image.tar  # Import image
+
 # Quick start
 make quickstart      # Setup and start in dev mode
 make quickstart-prod # Setup and start in prod mode

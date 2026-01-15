@@ -93,6 +93,10 @@ Documentation Guide
 → Read: [DEPLOYMENT.md](DEPLOYMENT.md#vercel-deployment)
 → Note: Understand limitations first
 
+**...export/backup Docker images**
+→ Run: `make docker-export` or `make docker-export-all`
+→ Read: [DEPLOYMENT.md](DEPLOYMENT.md#exporting-docker-images)
+
 **...understand what's available**
 → Read: [DEPLOYMENT_SUMMARY.md](DEPLOYMENT_SUMMARY.md)
 → Run: `make help`
@@ -110,6 +114,9 @@ make docker-up          # Start production setup
 make docker-up-dev      # Start development setup
 make docker-down        # Stop all services
 make docker-logs        # View logs
+make docker-export      # Export Docker image
+make docker-export-all  # Export all platform images
+make docker-import      # Import Docker image
 
 # Development commands
 make dev                # Start dev mode

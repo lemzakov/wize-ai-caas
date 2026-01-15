@@ -1,7 +1,7 @@
 # WIZE Platform - Makefile
 # Convenience commands for development and deployment
 
-.PHONY: help install build dev start stop clean docker-build docker-up docker-down docker-logs test lint
+.PHONY: help install build dev start stop clean docker-build docker-up docker-down docker-logs docker-export docker-import test lint
 
 # Default target
 .DEFAULT_GOAL := help
@@ -86,6 +86,79 @@ docker-shell: ## Open shell in n8n container
 
 docker-rebuild: ## Rebuild and restart Docker services
 	docker compose up -d --build
+
+docker-export: ## Export Docker image to tar file (IMAGE_NAME=wize-platform:local OUTPUT=wize-platform.tar)
+	@if [ -z "$(IMAGE_NAME)" ]; then \
+		IMAGE_NAME="wize-platform:local"; \
+	else \
+		IMAGE_NAME="$(IMAGE_NAME)"; \
+	fi; \
+	if [ -z "$(OUTPUT)" ]; then \
+		OUTPUT="wize-platform-$$(date +%Y%m%d-%H%M%S).tar"; \
+	else \
+		OUTPUT="$(OUTPUT)"; \
+	fi; \
+	echo "Exporting Docker image: $$IMAGE_NAME to $$OUTPUT"; \
+	docker save -o $$OUTPUT $$IMAGE_NAME && \
+	echo "Image exported successfully to $$OUTPUT" && \
+	ls -lh $$OUTPUT
+
+docker-export-compressed: ## Export Docker image to compressed tar.gz file (IMAGE_NAME=wize-platform:local OUTPUT=wize-platform.tar.gz)
+	@if [ -z "$(IMAGE_NAME)" ]; then \
+		IMAGE_NAME="wize-platform:local"; \
+	else \
+		IMAGE_NAME="$(IMAGE_NAME)"; \
+	fi; \
+	if [ -z "$(OUTPUT)" ]; then \
+		OUTPUT="wize-platform-$$(date +%Y%m%d-%H%M%S).tar.gz"; \
+	else \
+		OUTPUT="$(OUTPUT)"; \
+	fi; \
+	echo "Exporting and compressing Docker image: $$IMAGE_NAME to $$OUTPUT"; \
+	docker save $$IMAGE_NAME | gzip > $$OUTPUT && \
+	echo "Image exported and compressed successfully to $$OUTPUT" && \
+	ls -lh $$OUTPUT
+
+docker-import: ## Import Docker image from tar file (FILE=wize-platform.tar)
+	@if [ -z "$(FILE)" ]; then \
+		echo "Error: FILE not specified. Usage: FILE=wize-platform.tar make docker-import"; \
+		exit 1; \
+	fi; \
+	if [ ! -f "$(FILE)" ]; then \
+		echo "Error: File $(FILE) does not exist"; \
+		exit 1; \
+	fi; \
+	echo "Importing Docker image from $(FILE)..."; \
+	docker load -i $(FILE) && \
+	echo "Image imported successfully"
+
+docker-export-all: ## Export all WIZE Platform images (n8n, postgres, redis)
+	@OUTPUT_DIR="docker-images-$$(date +%Y%m%d-%H%M%S)"; \
+	mkdir -p $$OUTPUT_DIR; \
+	echo "Exporting all WIZE Platform images to $$OUTPUT_DIR/"; \
+	docker save -o $$OUTPUT_DIR/wize-n8n.tar docker.n8n.io/n8nio/n8n:latest && \
+	echo "  ✓ n8n image exported"; \
+	docker save -o $$OUTPUT_DIR/postgres.tar postgres:16-alpine && \
+	echo "  ✓ PostgreSQL image exported"; \
+	docker save -o $$OUTPUT_DIR/redis.tar redis:7-alpine && \
+	echo "  ✓ Redis image exported"; \
+	echo ""; \
+	echo "All images exported to $$OUTPUT_DIR/"; \
+	ls -lh $$OUTPUT_DIR/
+
+docker-export-all-compressed: ## Export all WIZE Platform images compressed
+	@OUTPUT_DIR="docker-images-$$(date +%Y%m%d-%H%M%S)"; \
+	mkdir -p $$OUTPUT_DIR; \
+	echo "Exporting and compressing all WIZE Platform images to $$OUTPUT_DIR/"; \
+	docker save docker.n8n.io/n8nio/n8n:latest | gzip > $$OUTPUT_DIR/wize-n8n.tar.gz && \
+	echo "  ✓ n8n image exported and compressed"; \
+	docker save postgres:16-alpine | gzip > $$OUTPUT_DIR/postgres.tar.gz && \
+	echo "  ✓ PostgreSQL image exported and compressed"; \
+	docker save redis:7-alpine | gzip > $$OUTPUT_DIR/redis.tar.gz && \
+	echo "  ✓ Redis image exported and compressed"; \
+	echo ""; \
+	echo "All images exported and compressed to $$OUTPUT_DIR/"; \
+	ls -lh $$OUTPUT_DIR/
 
 # Database Commands
 db-backup: ## Backup PostgreSQL database
