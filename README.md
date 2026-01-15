@@ -16,6 +16,8 @@ WIZE Platform (based on n8n) is a workflow automation platform for customer inte
 
 ## Quick Start
 
+**👉 New to WIZE Platform? Start here: [GETTING_STARTED.md](GETTING_STARTED.md)**
+
 ### Docker Deployment (Recommended)
 
 ```bash
@@ -23,13 +25,8 @@ WIZE Platform (based on n8n) is a workflow automation platform for customer inte
 git clone https://github.com/lemzakov/wize-ai-caas.git
 cd wize-ai-caas
 
-# Setup environment
+# Quick start (sets up everything)
 make quickstart
-
-# Or manually:
-cp .env.example .env
-# Edit .env and set N8N_ENCRYPTION_KEY
-docker-compose up -d
 ```
 
 Access the platform at http://localhost:5678
@@ -57,8 +54,10 @@ pnpm start
 
 ## Resources
 
+- 🚀 [**Getting Started Guide**](GETTING_STARTED.md) - Choose your deployment path
 - 📚 [Quick Start Guide](QUICKSTART.md) - Get started in minutes
 - 🚀 [Deployment Guide](DEPLOYMENT.md) - Docker, Vercel, and more
+- ✅ [Deployment Checklist](DEPLOYMENT_CHECKLIST.md) - Validation steps
 - 📋 [Default Workflows Manual (Russian)](DEFAULT_WORKFLOWS_MANUAL_RU.md) - Workflow templates
 - 🔧 [400+ Integrations](https://n8n.io/integrations)
 - 💡 [Example Workflows](https://n8n.io/workflows)
