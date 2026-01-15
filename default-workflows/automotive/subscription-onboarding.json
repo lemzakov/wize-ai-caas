@@ -1,0 +1,132 @@
+{
+  "name": "Онбординг подписки на автомобиль",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerOn": "specificFolder",
+        "path": "/subscriptions/new"
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "subscription-onboarding"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "table": "customers",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{ $json.email }}",
+            "firstName": "={{ $json.firstName }}",
+            "lastName": "={{ $json.lastName }}",
+            "phone": "={{ $json.phone }}",
+            "subscriptionStart": "={{ $now }}"
+          }
+        }
+      },
+      "id": "create-customer",
+      "name": "Создать клиента",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "PostgreSQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendEmail",
+        "fromEmail": "noreply@wize-platform.com",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Добро пожаловать в WIZE!",
+        "emailType": "html",
+        "message": "=<h1>Добро пожаловать!</h1><p>Уважаемый {{ $json.firstName }},</p><p>Спасибо за оформление подписки на автомобиль с WIZE.</p><p>Ваша подписка активна и готова к использованию.</p>"
+      },
+      "id": "send-welcome-email",
+      "name": "Отправить приветственное письмо",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [650, 300],
+      "credentials": {
+        "smtp": {
+          "id": "2",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "notification",
+        "channel": "#subscriptions",
+        "text": "=Новая подписка: {{ $json.firstName }} {{ $json.lastName }} ({{ $json.email }})"
+      },
+      "id": "notify-team",
+      "name": "Уведомить команду",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [650, 500],
+      "credentials": {
+        "slackApi": {
+          "id": "3",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Создать клиента",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Создать клиента": {
+      "main": [
+        [
+          {
+            "node": "Отправить приветственное письмо",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Уведомить команду",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "wize-default"
+  },
+  "tags": [
+    {
+      "name": "automotive"
+    },
+    {
+      "name": "onboarding"
+    },
+    {
+      "name": "subscription"
+    }
+  ]
+}
