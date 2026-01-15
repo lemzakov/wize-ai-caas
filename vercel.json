@@ -1,0 +1,66 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "name": "wize-platform",
+  "buildCommand": "pnpm build:deploy",
+  "outputDirectory": "compiled",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": null,
+  "regions": ["iad1"],
+  "env": {
+    "NODE_ENV": "production",
+    "N8N_HOST": "@n8n_host",
+    "N8N_PROTOCOL": "https",
+    "N8N_ENCRYPTION_KEY": "@n8n_encryption_key",
+    "WEBHOOK_URL": "@webhook_url",
+    "DB_TYPE": "@db_type",
+    "DB_POSTGRESDB_HOST": "@db_postgresdb_host",
+    "DB_POSTGRESDB_PORT": "@db_postgresdb_port",
+    "DB_POSTGRESDB_DATABASE": "@db_postgresdb_database",
+    "DB_POSTGRESDB_USER": "@db_postgresdb_user",
+    "DB_POSTGRESDB_PASSWORD": "@db_postgresdb_password",
+    "GENERIC_TIMEZONE": "Europe/Moscow",
+    "TZ": "Europe/Moscow"
+  },
+  "build": {
+    "env": {
+      "NODE_ENV": "production",
+      "NODE_OPTIONS": "--max-old-space-size=8192"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "packages/cli/dist/**/*.js": {
+      "memory": 3008,
+      "maxDuration": 60
+    }
+  }
+}

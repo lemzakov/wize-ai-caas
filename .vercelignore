@@ -1,0 +1,99 @@
+# Vercel build files
+.vercel
+
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+coverage
+*.junit.xml
+junit.xml
+test-results
+test-results/
+packages/testing/playwright/playwright-report
+packages/testing/playwright/test-results
+packages/testing/playwright/.playwright-browsers
+
+# Build outputs
+dist
+compiled
+.turbo
+packages/**/.turbo
+*.tsbuildinfo
+compiled_app_output
+.build
+build-storybook.log
+build.log
+
+# Development
+.DS_Store
+.vscode
+.idea
+.env.local
+.env.*.local
+.tmp
+tmp
+*.swp
+*.bak
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+*.log
+
+# Cache
+.stylelintcache
+.eslintcache
+.ruff_cache
+.nyc_output
+__pycache__
+
+# OS
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Secrets
+.secrets
+.env
+google-generated-credentials.json
+
+# Testing/Development
+_START_PACKAGE
+packages/cli/src/modules/my-feature
+packages/testing/**/.cursor/rules/
+.coverage
+.venv
+
+# Documentation
+CHANGELOG-*.md
+*.mdx
+
+# Data
+.data
+.data/
+packages/cli/src/commands/export/outputs
+
+# Trivy reports
+trivy_report*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+
+# GitHub
+.github/workflows
+.github/ISSUE_TEMPLATE
+.github/PULL_REQUEST_TEMPLATE
+.github/scripts
+
+# DevContainer
+.devcontainer
