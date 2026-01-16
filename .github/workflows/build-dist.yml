@@ -1,10 +1,7 @@
-name: Build dist zip
+name: Build dist zip (no build)
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*"
 
 jobs:
   dist:
@@ -16,86 +13,57 @@ jobs:
           fetch-depth: 1
           path: repo
 
-      - name: Debug files exist in repo
+      - name: Prepare dist folder (no docker build)
         run: |
           set -eux
           cd repo
-          ls -la
-          test -f Dockerfile
-          test -f package.json
-          test -f pnpm-lock.yaml
-          test -f pnpm-workspace.yaml
-          test -d patches
-          test -f docker-compose.yml || true
-          test -f .env.example || true
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Temporarily disable .dockerignore (it excludes required files)
-        run: |
-          set -eux
-          cd repo
-          if [ -f .dockerignore ]; then
-            echo "---- .dockerignore (head) ----"
-            sed -n '1,200p' .dockerignore || true
-            mv .dockerignore .dockerignore.bak
-          fi
-
-      - name: Build Docker image from Dockerfile (verbose)
-        run: |
-          set -eux
-          cd repo
-          docker build --progress=plain -f Dockerfile -t wize:v1 .
-
-      - name: Restore .dockerignore
-        if: always()
-        run: |
-          set -eux
-          cd repo
-          if [ -f .dockerignore.bak ]; then
-            mv .dockerignore.bak .dockerignore
-          fi
-
-      - name: Export Docker image to tar
-        run: |
-          set -eux
-          docker save -o wize_image.tar wize:v1
-
-      - name: Prepare dist folder
-        run: |
-          set -eux
-          cd repo
           mkdir -p DIST
 
+          # Основные файлы деплоя
           cp docker-compose.yml DIST/ 2>/dev/null || true
+          cp docker-compose.dev.yml DIST/ 2>/dev/null || true
+          cp Dockerfile DIST/ 2>/dev/null || true
           cp .env.example DIST/ 2>/dev/null || true
+          cp .dockerignore DIST/ 2>/dev/null || true
+
+          # Документация (у тебя её много — отлично)
+          cp README.md DIST/ 2>/dev/null || true
           cp QUICKSTART.md DIST/ 2>/dev/null || true
+          cp GETTING_STARTED.md DIST/ 2>/dev/null || true
           cp DEPLOYMENT.md DIST/ 2>/dev/null || true
+          cp DEPLOYMENT_CHECKLIST.md DIST/ 2>/dev/null || true
+          cp DEPLOYMENT_SUMMARY.md DIST/ 2>/dev/null || true
+          cp IMPLEMENTATION_SUMMARY.md DIST/ 2>/dev/null || true
           cp DEFAULT_WORKFLOWS_MANUAL_RU.md DIST/ 2>/dev/null || true
 
-          cp -r default-workflows DIST/ 2>/dev/null || true
+          # Важные папки (по твоему списку)
           cp -r docker DIST/ 2>/dev/null || true
+          cp -r default-workflows DIST/ 2>/dev/null || true
+          cp -r packages DIST/ 2>/dev/null || true
+          cp -r patches DIST/ 2>/dev/null || true
+          cp -r scripts DIST/ 2>/dev/null || true
+          cp -r assets DIST/ 2>/dev/null || true
 
-          mv ../wize_image.tar DIST/
+          # Корневые файлы сборки монорепы
+          cp package.json DIST/ 2>/dev/null || true
+          cp pnpm-lock.yaml DIST/ 2>/dev/null || true
+          cp pnpm-workspace.yaml DIST/ 2>/dev/null || true
+          cp turbo.json DIST/ 2>/dev/null || true
+          cp tsconfig.json DIST/ 2>/dev/null || true
 
+          # Инструкция для эксперта
           cat << 'EOF' > DIST/README_INSTALL.txt
-          Установка:
-          1) Установите Docker и Docker Compose.
-          2) В папке с дистрибутивом выполните:
+          Дистрибутив сформирован из файлов репозитория (без предсобранных образов).
 
-          docker load -i wize_image.tar
-          cp .env.example .env
-          docker compose up -d
+          Запуск (требуется Docker + Docker Compose):
+          1) cp .env.example .env
+          2) docker compose up -d --build
 
-          Открыть:
-          - адрес и порт смотрите в docker-compose.yml (часто http://localhost:5678)
+          Примечание:
+          - состав и параметры смотрите в docker-compose.yml и DEPLOYMENT.md
           EOF
 
-      - name: Zip dist
-        run: |
-          set -eux
-          cd repo
           (cd DIST && zip -r ../WIZE_DIST.zip .)
 
       - name: Upload artifact
@@ -103,9 +71,3 @@ jobs:
         with:
           name: WIZE_DIST
           path: repo/WIZE_DIST.zip
-
-      - name: Create GitHub Release (only on tag)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: repo/WIZE_DIST.zip
