@@ -12,54 +12,83 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          path: repo
+
+      - name: Debug repo root
+        run: |
+          set -eux
+          cd repo
+          pwd
+          ls -la
+          test -f Dockerfile
+          test -f package.json
+          test -f pnpm-lock.yaml
+          test -f pnpm-workspace.yaml
+          test -d patches
+          test -f docker-compose.yml
+          test -f .env.example
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image from Dockerfile
+      - name: Build Docker image from Dockerfile (verbose)
         run: |
-          docker build -t wize:v1 .
+          set -eux
+          cd repo
+          docker build --progress=plain -f Dockerfile -t wize:v1 .
 
       - name: Export Docker image to tar
         run: |
+          set -eux
           docker save -o wize_image.tar wize:v1
 
       - name: Prepare dist folder
         run: |
+          set -eux
+          cd repo
           mkdir -p DIST
+
           cp docker-compose.yml DIST/ || true
           cp .env.example DIST/ || true
-          cp QUICKSTART.md DIST/ || true
-          cp DEPLOYMENT.md DIST/ || true
-          cp DEFAULT_WORKFLOWS_MANUAL_RU.md DIST/ || true
+
+          cp QUICKSTART.md DIST/ 2>/dev/null || true
+          cp DEPLOYMENT.md DIST/ 2>/dev/null || true
+          cp DEFAULT_WORKFLOWS_MANUAL_RU.md DIST/ 2>/dev/null || true
+
           cp -r default-workflows DIST/ 2>/dev/null || true
           cp -r docker DIST/ 2>/dev/null || true
-          mv wize_image.tar DIST/
+
+          mv ../wize_image.tar DIST/
+
           cat > DIST/README_INSTALL.txt << 'EOF'
           Установка:
           1) Установите Docker и Docker Compose.
-          2) В папке DIST выполните:
+          2) В папке с дистрибутивом выполните:
 
           docker load -i wize_image.tar
           cp .env.example .env
           docker compose up -d
 
           Открыть:
-          - адрес смотрите в docker-compose.yml (обычно http://localhost:5678)
+          - адрес и порт смотрите в docker-compose.yml (часто http://localhost:5678)
           EOF
 
       - name: Zip dist
         run: |
+          set -eux
+          cd repo
           (cd DIST && zip -r ../WIZE_DIST.zip .)
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: WIZE_DIST
-          path: WIZE_DIST.zip
+          path: repo/WIZE_DIST.zip
 
       - name: Create GitHub Release (only on tag)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: WIZE_DIST.zip
+          files: repo/WIZE_DIST.zip
