@@ -16,28 +16,46 @@ jobs:
           fetch-depth: 1
           path: repo
 
-      - name: Debug repo root
+      - name: Debug files exist in repo
         run: |
           set -eux
           cd repo
-          pwd
           ls -la
           test -f Dockerfile
           test -f package.json
           test -f pnpm-lock.yaml
           test -f pnpm-workspace.yaml
           test -d patches
-          test -f docker-compose.yml
-          test -f .env.example
+          test -f docker-compose.yml || true
+          test -f .env.example || true
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Temporarily disable .dockerignore (it excludes required files)
+        run: |
+          set -eux
+          cd repo
+          if [ -f .dockerignore ]; then
+            echo "---- .dockerignore (head) ----"
+            sed -n '1,200p' .dockerignore || true
+            mv .dockerignore .dockerignore.bak
+          fi
 
       - name: Build Docker image from Dockerfile (verbose)
         run: |
           set -eux
           cd repo
           docker build --progress=plain -f Dockerfile -t wize:v1 .
+
+      - name: Restore .dockerignore
+        if: always()
+        run: |
+          set -eux
+          cd repo
+          if [ -f .dockerignore.bak ]; then
+            mv .dockerignore.bak .dockerignore
+          fi
 
       - name: Export Docker image to tar
         run: |
@@ -50,9 +68,8 @@ jobs:
           cd repo
           mkdir -p DIST
 
-          cp docker-compose.yml DIST/ || true
-          cp .env.example DIST/ || true
-
+          cp docker-compose.yml DIST/ 2>/dev/null || true
+          cp .env.example DIST/ 2>/dev/null || true
           cp QUICKSTART.md DIST/ 2>/dev/null || true
           cp DEPLOYMENT.md DIST/ 2>/dev/null || true
           cp DEFAULT_WORKFLOWS_MANUAL_RU.md DIST/ 2>/dev/null || true
@@ -62,7 +79,7 @@ jobs:
 
           mv ../wize_image.tar DIST/
 
-          cat > DIST/README_INSTALL.txt << 'EOF'
+          cat << 'EOF' > DIST/README_INSTALL.txt
           Установка:
           1) Установите Docker и Docker Compose.
           2) В папке с дистрибутивом выполните:
