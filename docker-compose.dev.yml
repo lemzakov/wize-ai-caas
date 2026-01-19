@@ -9,7 +9,7 @@ services:
     container_name: wize-n8n-dev
     restart: unless-stopped
     ports:
-      - "5678:5678"
+      - '5678:5678'
     environment:
       - N8N_HOST=localhost
       - N8N_PORT=5678
