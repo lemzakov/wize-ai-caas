@@ -1,5 +1,3 @@
-![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
-
 # WIZE Platform - Платформа по цифровизации и автоматизации взаимодействия с клиентом
 
 WIZE Platform is a workflow automation platform for customer interaction digitization and automation within the car subscription lifecycle. It gives technical teams the flexibility of code with the speed of no-code. With 400+ integrations, native AI capabilities, and a fair-code license, WIZE lets you build powerful automations while maintaining full control over your data and deployments.
