@@ -55,9 +55,9 @@ export class NodeMailer {
 				html: mailData.body,
 				attachments: [
 					{
-						cid: 'n8n-logo',
-						filename: 'n8n-logo.png',
-						path: path.resolve(__dirname, 'templates/n8n-logo.png'),
+						cid: 'wize-logo',
+						filename: 'wize-logo.png',
+						path: path.resolve(__dirname, 'templates/wize-logo.png'),
 						contentDisposition: 'inline',
 					},
 				],

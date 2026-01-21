@@ -248,20 +248,7 @@ export class CommunityPackagesService {
 	}
 
 	async checkNpmPackageStatus(packageName: string) {
-		const N8N_BACKEND_SERVICE_URL = 'https://api.n8n.io/api/package';
-
-		try {
-			const response = await axios.post<CommunityPackages.PackageStatusCheck>(
-				N8N_BACKEND_SERVICE_URL,
-				{ name: packageName },
-				{ method: 'POST' },
-			);
-
-			if (response.data.status !== NPM_PACKAGE_STATUS_GOOD) return response.data;
-		} catch {
-			// service unreachable, do nothing
-		}
-
+		// External API call disabled for WIZE Platform
 		return { status: NPM_PACKAGE_STATUS_GOOD };
 	}
 
