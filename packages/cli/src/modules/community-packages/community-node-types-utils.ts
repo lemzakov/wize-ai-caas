@@ -21,16 +21,13 @@ export type StrapiCommunityNodeType = {
 	nodeVersions?: Array<{ npmVersion: string; checksum: string }>;
 };
 
-const N8N_VETTED_NODE_TYPES_STAGING_URL = 'https://api-staging.n8n.io/api/community-nodes';
-const N8N_VETTED_NODE_TYPES_PRODUCTION_URL = 'https://api.n8n.io/api/community-nodes';
+// Disabled external API calls - WIZE Platform runs independently
+const N8N_VETTED_NODE_TYPES_STAGING_URL = '';
+const N8N_VETTED_NODE_TYPES_PRODUCTION_URL = '';
 
 export async function getCommunityNodeTypes(
 	environment: 'staging' | 'production',
 ): Promise<StrapiCommunityNodeType[]> {
-	const url =
-		environment === 'production'
-			? N8N_VETTED_NODE_TYPES_PRODUCTION_URL
-			: N8N_VETTED_NODE_TYPES_STAGING_URL;
-
-	return await paginatedRequest<StrapiCommunityNodeType>(url);
+	// External API call disabled for WIZE Platform
+	return Promise.resolve([]);
 }

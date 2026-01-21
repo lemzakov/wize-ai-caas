@@ -45,18 +45,12 @@ export class TelemetryController {
 		usesTemplates: true,
 	})
 	async sourceConfig(_: Request, res: Response) {
-		const response = await fetch('https://api-rs.n8n.io/sourceConfig', {
-			headers: {
-				authorization:
-					'Basic ' + btoa(`${this.globalConfig.diagnostics.frontendConfig.split(';')[0]}:`),
+		// External telemetry API disabled for WIZE Platform
+		const config: unknown = {
+			source: {
+				enabled: false,
 			},
-		});
-
-		if (!response.ok) {
-			throw new Error(`Failed to fetch source config: ${response.statusText}`);
-		}
-
-		const config: unknown = await response.json();
+		};
 
 		// write directly to response to avoid wrapping the config in `data` key which is not expected by RudderStack sdk
 		res.json(config);
