@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - '5432:5432'
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U n8n']
       interval: 5s
@@ -30,7 +30,7 @@ services:
     volumes:
       - redis_data:/data
     ports:
-      - "6379:6379"
+      - '6379:6379'
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
@@ -45,7 +45,7 @@ services:
     container_name: wize-n8n
     restart: unless-stopped
     ports:
-      - "5678:5678"
+      - '5678:5678'
     environment:
       # Database Configuration
       - DB_TYPE=postgresdb
@@ -54,33 +54,33 @@ services:
       - DB_POSTGRESDB_DATABASE=n8n
       - DB_POSTGRESDB_USER=n8n
       - DB_POSTGRESDB_PASSWORD=n8n
-      
+
       # Redis Configuration
       - QUEUE_BULL_REDIS_HOST=redis
       - QUEUE_BULL_REDIS_PORT=6379
       - EXECUTIONS_MODE=queue
-      
+
       # Basic Configuration
       - N8N_HOST=${N8N_HOST:-localhost}
       - N8N_PORT=5678
       - N8N_PROTOCOL=${N8N_PROTOCOL:-http}
       - WEBHOOK_URL=${WEBHOOK_URL:-http://localhost:5678/}
-      
+
       # Security
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
-      
+
       # Timezone
       - GENERIC_TIMEZONE=${TIMEZONE:-Europe/Moscow}
       - TZ=${TIMEZONE:-Europe/Moscow}
-      
+
       # Editor URL
       - VUE_APP_URL_BASE_API=${VUE_APP_URL_BASE_API:-http://localhost:5678/}
-      
+
       # Execution settings
       - EXECUTIONS_DATA_SAVE_ON_ERROR=all
       - EXECUTIONS_DATA_SAVE_ON_SUCCESS=all
       - EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=true
-      
+
       # Logging
       - N8N_LOG_LEVEL=${N8N_LOG_LEVEL:-info}
       - N8N_LOG_OUTPUT=${N8N_LOG_OUTPUT:-console}
@@ -115,19 +115,19 @@ services:
       - DB_POSTGRESDB_DATABASE=n8n
       - DB_POSTGRESDB_USER=n8n
       - DB_POSTGRESDB_PASSWORD=n8n
-      
+
       # Redis Configuration
       - QUEUE_BULL_REDIS_HOST=redis
       - QUEUE_BULL_REDIS_PORT=6379
       - EXECUTIONS_MODE=queue
-      
+
       # Security
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
-      
+
       # Timezone
       - GENERIC_TIMEZONE=${TIMEZONE:-Europe/Moscow}
       - TZ=${TIMEZONE:-Europe/Moscow}
-      
+
       # Logging
       - N8N_LOG_LEVEL=${N8N_LOG_LEVEL:-info}
       - N8N_LOG_OUTPUT=${N8N_LOG_OUTPUT:-console}
